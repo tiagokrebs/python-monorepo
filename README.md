@@ -4,10 +4,11 @@
 
 Pre-commit hooks automatically run:
 - **Dependency validation** (Python packages only)
-- **Lint and format** (language-specific):
-  - Python packages (foo, bar): `ruff format` + `ruff check`  
-  - Node.js packages (baz): `eslint --fix` + `eslint`
-  - Only runs on staged files in respective packages
+- **Lint and format** (auto-detects package types):
+  - **Python packages**: Detected by `pyproject.toml` → `ruff format` + `ruff check`  
+  - **Node.js packages**: Detected by `package.json` → `eslint --fix` + `eslint`
+  - Only runs on staged files with NX project configuration
+  - Skips packages without NX `project.json` files
 
 ## Dependency Validation (Python packages only)
 

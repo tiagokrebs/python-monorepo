@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Multi-language pre-commit lint and format script
-# Handles Python (ruff) and Node.js (eslint) projects
+# Auto-detects Python vs Node.js packages based on project structure
 
 set -e
 
@@ -20,33 +20,77 @@ HAS_PYTHON_FILES=false
 HAS_JS_TS_FILES=false
 HAS_ERRORS=false
 
-# Check for Python files in packages/foo or packages/bar
-PYTHON_FILES=$(echo "$STAGED_FILES" | grep -E '^packages/(foo|bar)/.*\.py$' || true)
-if [ -n "$PYTHON_FILES" ]; then
-  HAS_PYTHON_FILES=true
-fi
+# Function to detect package type based on project files
+detect_package_type() {
+  local package_dir="$1"
+  
+  # Check if it's a Python package (has pyproject.toml)
+  if [ -f "$package_dir/pyproject.toml" ]; then
+    echo "python"
+    return
+  fi
+  
+  # Check if it's a Node.js package (has package.json)
+  if [ -f "$package_dir/package.json" ]; then
+    echo "nodejs"
+    return
+  fi
+  
+  # Unknown type
+  echo "unknown"
+}
 
-# Check for JS/TS files in packages/baz
-JS_TS_FILES=$(echo "$STAGED_FILES" | grep -E '^packages/baz/.*\.(js|ts|jsx|tsx)$' || true)
-if [ -n "$JS_TS_FILES" ]; then
-  HAS_JS_TS_FILES=true
-fi
+# Get unique package directories from staged files
+PACKAGE_DIRS=$(echo "$STAGED_FILES" | grep -E '^packages/[^/]+/' | sed 's|^packages/\([^/]*\)/.*|\1|' | sort -u)
+
+# Categorize packages and files
+PYTHON_PACKAGES=""
+NODEJS_PACKAGES=""
+
+for package in $PACKAGE_DIRS; do
+  package_type=$(detect_package_type "packages/$package")
+  
+  case $package_type in
+    "python")
+      # Check if this package has staged Python files
+      PACKAGE_PYTHON_FILES=$(echo "$STAGED_FILES" | grep -E "^packages/$package/.*\.py$" || true)
+      if [ -n "$PACKAGE_PYTHON_FILES" ]; then
+        PYTHON_PACKAGES="$PYTHON_PACKAGES $package"
+        HAS_PYTHON_FILES=true
+      fi
+      ;;
+    "nodejs")
+      # Check if this package has staged JS/TS files
+      PACKAGE_JS_FILES=$(echo "$STAGED_FILES" | grep -E "^packages/$package/.*\.(js|ts|jsx|tsx)$" || true)
+      if [ -n "$PACKAGE_JS_FILES" ]; then
+        NODEJS_PACKAGES="$NODEJS_PACKAGES $package"
+        HAS_JS_TS_FILES=true
+      fi
+      ;;
+    "unknown")
+      echo "⚠️  Unknown package type for packages/$package (no pyproject.toml or package.json found)"
+      ;;
+  esac
+done
+
+# Function to check if package has NX configuration
+package_has_nx_config() {
+  local package="$1"
+  [ -f "packages/$package/project.json" ]
+}
 
 # Function to run Python linting and formatting
 run_python_checks() {
   echo "🐍 Running Python checks..."
   
-  # Get affected Python packages
-  AFFECTED_PYTHON_PACKAGES=""
-  if echo "$PYTHON_FILES" | grep -q "packages/foo/"; then
-    AFFECTED_PYTHON_PACKAGES="$AFFECTED_PYTHON_PACKAGES foo"
-  fi
-  if echo "$PYTHON_FILES" | grep -q "packages/bar/"; then
-    AFFECTED_PYTHON_PACKAGES="$AFFECTED_PYTHON_PACKAGES bar"
-  fi
-  
-  for package in $AFFECTED_PYTHON_PACKAGES; do
-    echo "  📦 Checking package: $package"
+  for package in $PYTHON_PACKAGES; do
+    echo "  📦 Checking Python package: $package"
+    
+    # Check if package has NX configuration
+    if ! package_has_nx_config "$package"; then
+      echo "    ⚠️  Skipping $package (no NX project.json found)"
+      continue
+    fi
     
     # Format first (ruff format)
     echo "    🎨 Formatting with ruff..."
@@ -68,22 +112,29 @@ run_python_checks() {
 run_nodejs_checks() {
   echo "🟨 Running Node.js checks..."
   
-  # Format and lint baz package
-  echo "  📦 Checking package: baz"
-  
-  # Format with eslint --fix
-  echo "    🎨 Formatting with eslint..."
-  if ! npx nx run baz:format; then
-    echo "    ❌ Formatting failed for baz"
-    HAS_ERRORS=true
-  fi
-  
-  # Lint with eslint
-  echo "    🔍 Linting with eslint..."
-  if ! npx nx run baz:lint; then
-    echo "    ❌ Linting failed for baz"
-    HAS_ERRORS=true
-  fi
+  for package in $NODEJS_PACKAGES; do
+    echo "  📦 Checking Node.js package: $package"
+    
+    # Check if package has NX configuration
+    if ! package_has_nx_config "$package"; then
+      echo "    ⚠️  Skipping $package (no NX project.json found)"
+      continue
+    fi
+    
+    # Format with eslint --fix
+    echo "    🎨 Formatting with eslint..."
+    if ! npx nx run $package:format; then
+      echo "    ❌ Formatting failed for $package"
+      HAS_ERRORS=true
+    fi
+    
+    # Lint with eslint
+    echo "    🔍 Linting with eslint..."
+    if ! npx nx run $package:lint; then
+      echo "    ❌ Linting failed for $package"
+      HAS_ERRORS=true
+    fi
+  done
 }
 
 # Run checks based on file types

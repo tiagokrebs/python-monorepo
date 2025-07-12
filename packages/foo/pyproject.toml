@@ -35,3 +35,8 @@ packages = ["src/foo"]
 
 [tool.hatch.metadata]
 allow-direct-references = true
+
+[dependency-groups]
+dev = [
+    "ruff==0.0.280",
+]

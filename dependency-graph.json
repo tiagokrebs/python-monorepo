@@ -62,14 +62,22 @@
             },
             "lint": {
               "executor": "@nxlv/python:ruff-check",
-              "options": {},
+              "options": {
+                "lintFilePatterns": [
+                  "src"
+                ]
+              },
               "configurations": {},
               "parallelism": true,
               "cache": true
             },
             "format": {
               "executor": "@nxlv/python:ruff-format",
-              "options": {},
+              "options": {
+                "filePatterns": [
+                  "src/**/*.py"
+                ]
+              },
               "configurations": {},
               "parallelism": true
             },
@@ -176,14 +184,22 @@
             },
             "lint": {
               "executor": "@nxlv/python:ruff-check",
-              "options": {},
+              "options": {
+                "lintFilePatterns": [
+                  "src"
+                ]
+              },
               "configurations": {},
               "parallelism": true,
               "cache": true
             },
             "format": {
               "executor": "@nxlv/python:ruff-format",
-              "options": {},
+              "options": {
+                "filePatterns": [
+                  "src/**/*.py"
+                ]
+              },
               "configurations": {},
               "parallelism": true
             },

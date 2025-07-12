@@ -28,11 +28,15 @@
     },
     "lint": {
       "executor": "@nxlv/python:ruff-check",
-      "options": {}
+      "options": {
+        "lintFilePatterns": ["src"]
+      }
     },
     "format": {
       "executor": "@nxlv/python:ruff-format",
-      "options": {}
+      "options": {
+        "filePatterns": ["src/**/*.py"]
+      }
     },
     "serve": {
       "executor": "@nxlv/python:run-commands",

@@ -117,49 +117,37 @@ cd ../..
 # Output: All packages have approved dependencies
 ```
 
-## How to Run Packages
+## Git Hooks (Husky)
+
+The repository uses [Husky](https://typicode.github.io/husky/) to automatically validate dependencies before commits:
 
 ### Setup
 ```bash
-# Make sure you're in the python-monorepo directory (the one with pyproject.toml)
-cd python-monorepo  # if needed
-
-# Install validation tooling
+# Install dependencies (includes Husky setup)
 npm install
 ```
 
-### Run foo package
+### How it Works
+- **Pre-commit hook**: Automatically runs `./validate-deps.sh` before every commit
+- **Validation passes**: Commit proceeds normally
+- **Validation fails**: Commit is blocked with error details
+
+### Example
 ```bash
-# From the python-monorepo root directory:
-cd packages/foo
-uv sync
-uv run python -c "from foo import get_foo; print(get_foo())"
+# This will be blocked if you have unapproved dependencies
+git commit -m "Add new feature"
+# Output: husky - pre-commit script failed (code 1)
 
-# OR, staying in root directory:
-uv sync --directory packages/foo
-uv run --directory packages/foo python -c "from foo import get_foo; print(get_foo())"
+# Fix dependencies, then commit will succeed
+./validate-deps.sh  # Check what's wrong
+# Fix the issues...
+git commit -m "Add new feature"  # Now works
 ```
 
-### Run bar package
-```bash
-# From the python-monorepo root directory:
-cd packages/bar
-uv sync
-uv run python -c "from bar import run_bar; run_bar()"
+## Troubleshooting
 
-# OR, staying in root directory:
-uv sync --directory packages/bar
-uv run --directory packages/bar python -c "from bar import run_bar; run_bar()"
-```
-
-## Structure
-
-```
-python-monorepo/
-├── pyproject.toml          # Centralized dependency control
-├── validate-deps.js        # Validation tool
-├── validate-deps.sh        # Shell wrapper
-└── packages/
-    ├── foo/                # Package: foo
-    └── bar/                # Package: bar (depends on foo)
-```
+- **"no such file or directory: packages/foo"**: Make sure you're in the `python-monorepo` directory (the one containing `pyproject.toml`), not the parent directory
+- **Path errors**: Check that you're running commands from the correct working directory as shown above
+- **"husky - pre-commit script failed"**: Your dependencies don't pass validation. Run `./validate-deps.sh` to see what's wrong
+- **Git hooks not working**: Run `npm install` to set up Husky properly
+````

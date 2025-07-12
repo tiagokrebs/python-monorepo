@@ -1,0 +1,20 @@
+{
+  "name": "baz",
+  "version": "0.1.0",
+  "description": "Simple Node.js server that responds with hello",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0"
+  },
+  "keywords": ["express", "server", "hello"],
+  "author": "Your Name",
+  "license": "MIT"
+}

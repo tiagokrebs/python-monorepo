@@ -1,0 +1,70 @@
+{
+  "name": "baz",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "packages/baz/src",
+  "targets": {
+    "install": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm install",
+        "cwd": "packages/baz"
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node src/index.js",
+        "cwd": "packages/baz"
+      },
+      "dependsOn": ["install"]
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node src/index.js",
+        "cwd": "packages/baz"
+      },
+      "dependsOn": ["install"]
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo 'Build completed for baz'",
+        "cwd": "packages/baz"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm test",
+        "cwd": "packages/baz"
+      },
+      "dependsOn": ["install"]
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx eslint src/**/*.js",
+        "cwd": "packages/baz"
+      },
+      "dependsOn": ["install"]
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx eslint src/**/*.js --fix",
+        "cwd": "packages/baz"
+      },
+      "dependsOn": ["install"]
+    },
+    "sync": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm install",
+        "cwd": "packages/baz"
+      }
+    }
+  },
+  "tags": ["nodejs", "application", "server"]
+}

@@ -89,6 +89,7 @@ class DependencyValidator {
   validatePackage(packageDir) {
     const packageName = path.basename(packageDir);
     const pyprojectPath = path.join(packageDir, 'pyproject.toml');
+    const packageJsonPath = path.join(packageDir, 'package.json');
     
     const result = {
       package: packageName,
@@ -96,6 +97,14 @@ class DependencyValidator {
       dependencies: [],
       isValid: true
     };
+
+    // Skip non-Python packages (Node.js packages with package.json but no pyproject.toml)
+    if (!fs.existsSync(pyprojectPath) && fs.existsSync(packageJsonPath)) {
+      result.isValid = true;
+      result.skipped = true;
+      result.reason = 'Non-Python package (Node.js/other)';
+      return result;
+    }
 
     if (!fs.existsSync(pyprojectPath)) {
       result.errors.push(`No pyproject.toml found in ${packageName}`);
@@ -160,7 +169,9 @@ class DependencyValidator {
     for (const packageDir of packageDirs) {
       const result = this.validatePackage(packageDir);
 
-      if (result.isValid) {
+      if (result.skipped) {
+        console.log(`${result.package}: Skipped (${result.reason})`);
+      } else if (result.isValid) {
         console.log(`${result.package}: All dependencies approved`);
       } else {
         console.log(`Package: ${result.package}`);

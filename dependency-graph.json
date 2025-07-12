@@ -21,18 +21,12 @@
             "install": {
               "executor": "@nxlv/python:install",
               "options": {},
+              "dependsOn": [
+                "foo:install"
+              ],
               "configurations": {},
               "parallelism": true,
               "cache": true
-            },
-            "sync": {
-              "executor": "@nxlv/python:sync",
-              "options": {},
-              "dependsOn": [
-                "foo:sync"
-              ],
-              "configurations": {},
-              "parallelism": true
             },
             "build": {
               "executor": "@nxlv/python:build",
@@ -294,12 +288,6 @@
               "configurations": {},
               "parallelism": true,
               "cache": true
-            },
-            "sync": {
-              "executor": "@nxlv/python:sync",
-              "options": {},
-              "configurations": {},
-              "parallelism": true
             },
             "build": {
               "executor": "@nxlv/python:build",

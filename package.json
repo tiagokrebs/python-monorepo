@@ -1,0 +1,17 @@
+{
+  "name": "python-monorepo-validator",
+  "version": "1.0.0",
+  "description": "Simple dependency validator for Python monorepo",
+  "private": true,
+  "scripts": {
+    "validate": "node validate-deps.js",
+    "validate:package": "node validate-deps.js --package",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "@iarna/toml": "^2.2.5"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}

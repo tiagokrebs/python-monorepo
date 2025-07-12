@@ -144,10 +144,25 @@ git commit -m "Add new feature"
 git commit -m "Add new feature"  # Now works
 ```
 
+## Structure
+
+```
+python-monorepo/
+├── .gitignore              # Ignores node_modules, __pycache__, uv.lock, etc.
+├── .husky/                 # Git hooks (Husky)
+│   └── pre-commit         # Runs dependency validation
+├── pyproject.toml          # Centralized dependency control
+├── package.json            # Node.js dependencies for validation
+├── validate-deps.js        # Validation tool
+├── validate-deps.sh        # Shell wrapper
+└── packages/
+    ├── foo/                # Package: foo
+    └── bar/                # Package: bar (depends on foo)
+```
+
 ## Troubleshooting
 
 - **"no such file or directory: packages/foo"**: Make sure you're in the `python-monorepo` directory (the one containing `pyproject.toml`), not the parent directory
 - **Path errors**: Check that you're running commands from the correct working directory as shown above
 - **"husky - pre-commit script failed"**: Your dependencies don't pass validation. Run `./validate-deps.sh` to see what's wrong
 - **Git hooks not working**: Run `npm install` to set up Husky properly
-````

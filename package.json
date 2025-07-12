@@ -1,17 +1,37 @@
 {
   "name": "python-monorepo-validator",
   "version": "1.0.0",
-  "description": "Simple dependency validator for Python monorepo",
+  "description": "Python monorepo with NX and centralized dependency management",
   "private": true,
+  "packageManager": "pnpm@10.13.1",
   "scripts": {
     "validate": "node validate-deps.js",
     "validate:package": "node validate-deps.js --package",
-    "prepare": "husky"
+    "prepare": "husky",
+    "build": "nx run-many -t build",
+    "test": "nx run-many -t test",
+    "lint": "nx run-many -t lint",
+    "format": "nx run-many -t format",
+    "serve:foo": "nx run foo:serve",
+    "serve:bar": "nx run bar:serve",
+    "sync": "nx run-many -t sync",
+    "sync:foo": "nx run foo:sync",
+    "sync:bar": "nx run bar:sync",
+    "uv-sync": "nx run-many -t uv-sync",
+    "uv-sync:foo": "nx run foo:uv-sync",
+    "uv-sync:bar": "nx run bar:uv-sync",
+    "graph": "nx graph",
+    "affected": "nx affected",
+    "affected:build": "nx affected -t build",
+    "affected:test": "nx affected -t test",
+    "affected:lint": "nx affected -t lint"
   },
   "dependencies": {
     "@iarna/toml": "^2.2.5"
   },
   "devDependencies": {
-    "husky": "^9.1.7"
+    "@nxlv/python": "^21.0.3",
+    "husky": "^9.1.7",
+    "nx": "21.2.3"
   }
 }

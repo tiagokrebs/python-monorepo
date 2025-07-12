@@ -1,6 +1,6 @@
-# Python Monorepo
+# Python Monorepo with NX
 
-A Python monorepo with centralized dependency management. Contains two packages (`foo` and `bar`) with automatic validation of approved dependencies.
+A Python monorepo with centralized dependency management, powered by NX and @nxlv/python. Contains two packages (`foo` and `bar`) with automatic validation of approved dependencies and intelligent task orchestration.
 
 ## What This Is
 
@@ -8,6 +8,8 @@ A Python monorepo with centralized dependency management. Contains two packages 
 - **Path dependencies**: Packages can depend on each other using local paths
 - **Centralized control**: All external dependencies must be pre-approved
 - **Automatic validation**: JavaScript tool validates all packages comply with approved dependencies
+- **NX integration**: Intelligent task orchestration, caching, and dependency management
+- **Dual workflow**: Both NX commands and direct uv commands work seamlessly
 
 ## How Centralized Dependencies Work
 
@@ -90,6 +92,69 @@ cd packages/bar
 uv remove pytest
 ```
 
+## NX Integration
+
+This monorepo uses NX for intelligent task orchestration and caching. You can use both NX commands and direct uv commands.
+
+### NX Commands
+
+```bash
+# Install dependencies using pnpm
+pnpm install
+
+# Run sync for all packages (respects dependencies)
+pnpm run sync
+
+# Run sync for specific package
+pnpm run sync:foo
+pnpm run sync:bar
+
+# Run code (serves the packages)
+pnpm run serve:foo  # Outputs: foo
+pnpm run serve:bar  # Outputs: foobar (depends on foo)
+
+# Build all packages
+pnpm run build
+
+# Test all packages
+pnpm run test
+
+# Lint all packages
+pnpm run lint
+
+# Format all packages
+pnpm run format
+
+# Run affected tasks only (great for CI)
+pnpm run affected:build
+pnpm run affected:test
+pnpm run affected:lint
+
+# View dependency graph
+pnpm run graph
+```
+
+### Direct uv Commands (still work!)
+
+```bash
+# Sync specific package directly
+cd packages/foo && uv sync
+
+# Run Python code directly
+cd packages/foo && uv run python -c "from foo import get_foo; print(get_foo())"
+
+# Add dependencies directly
+cd packages/bar && uv add requests==2.31.0
+```
+
+### NX Benefits
+
+- **Intelligent caching**: NX caches task results, making subsequent runs faster
+- **Dependency orchestration**: Automatically runs `foo:install` before `bar:serve`
+- **Affected analysis**: Only run tasks for packages that have changed
+- **Parallel execution**: Run multiple tasks in parallel when possible
+- **Visual graphs**: See your project dependencies visually
+
 ### Important Notes
 
 - **Always use exact versions** (e.g., `==7.4.0`) to match the approved list
@@ -117,6 +182,38 @@ cd ../..
 # Output: All packages have approved dependencies
 ```
 
+## How to Run Packages
+
+You now have two ways to run your packages:
+
+### Method 1: Using NX (Recommended)
+```bash
+# Run foo package
+pnpm run serve:foo
+
+# Run bar package (automatically installs foo first)
+pnpm run serve:bar
+
+# Sync all packages
+pnpm run sync
+
+# Run any specific task
+pnpm exec nx run foo:serve
+pnpm exec nx run bar:uv-sync
+```
+
+### Method 2: Direct uv commands (still works!)
+```bash
+# From the python-monorepo root directory:
+cd packages/foo
+uv sync
+uv run python -c "from foo import get_foo; print(get_foo())"
+
+# OR, staying in root directory:
+uv sync --directory packages/foo
+uv run --directory packages/foo python -c "from foo import get_foo; print(get_foo())"
+```
+
 ## Git Hooks (Husky)
 
 The repository uses [Husky](https://typicode.github.io/husky/) to automatically validate dependencies before commits:
@@ -124,7 +221,7 @@ The repository uses [Husky](https://typicode.github.io/husky/) to automatically 
 ### Setup
 ```bash
 # Install dependencies (includes Husky setup)
-npm install
+pnpm install
 ```
 
 ### How it Works
@@ -151,13 +248,16 @@ python-monorepo/
 ├── .gitignore              # Ignores node_modules, __pycache__, uv.lock, etc.
 ├── .husky/                 # Git hooks (Husky)
 │   └── pre-commit         # Runs dependency validation
+├── nx.json                 # NX workspace configuration
 ├── pyproject.toml          # Centralized dependency control
-├── package.json            # Node.js dependencies for validation
+├── package.json            # Node.js dependencies (pnpm) + NX scripts
 ├── validate-deps.js        # Validation tool
 ├── validate-deps.sh        # Shell wrapper
 └── packages/
     ├── foo/                # Package: foo
+    │   └── project.json   # NX project configuration
     └── bar/                # Package: bar (depends on foo)
+        └── project.json   # NX project configuration
 ```
 
 ## Troubleshooting
@@ -165,4 +265,6 @@ python-monorepo/
 - **"no such file or directory: packages/foo"**: Make sure you're in the `python-monorepo` directory (the one containing `pyproject.toml`), not the parent directory
 - **Path errors**: Check that you're running commands from the correct working directory as shown above
 - **"husky - pre-commit script failed"**: Your dependencies don't pass validation. Run `./validate-deps.sh` to see what's wrong
-- **Git hooks not working**: Run `npm install` to set up Husky properly
+- **Git hooks not working**: Run `pnpm install` to set up Husky properly
+- **NX commands not working**: Make sure you have pnpm installed and run `pnpm install` first
+- **Python virtual environment issues**: Use `uv sync` in the package directory to recreate the environment

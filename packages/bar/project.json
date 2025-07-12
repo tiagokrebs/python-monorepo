@@ -1,0 +1,80 @@
+{
+  "name": "bar",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "packages/bar/src",
+  "targets": {
+    "install": {
+      "executor": "@nxlv/python:install",
+      "options": {}
+    },
+    "sync": {
+      "executor": "@nxlv/python:sync",
+      "options": {},
+      "dependsOn": ["foo:sync"]
+    },
+    "build": {
+      "executor": "@nxlv/python:build",
+      "options": {
+        "outputPath": "dist/packages/bar",
+        "publish": false
+      },
+      "dependsOn": ["foo:build"]
+    },
+    "test": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "python -m pytest",
+        "cwd": "packages/bar"
+      },
+      "dependsOn": ["foo:install"]
+    },
+    "lint": {
+      "executor": "@nxlv/python:ruff-check",
+      "options": {}
+    },
+    "format": {
+      "executor": "@nxlv/python:ruff-format",
+      "options": {}
+    },
+    "serve": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "python -c \"from bar import run_bar; run_bar()\"",
+        "cwd": "packages/bar"
+      },
+      "dependsOn": ["foo:install"]
+    },
+    "add": {
+      "executor": "@nxlv/python:add",
+      "options": {}
+    },
+    "remove": {
+      "executor": "@nxlv/python:remove",
+      "options": {}
+    },
+    "uv-sync": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv sync",
+        "cwd": "packages/bar"
+      }
+    },
+    "uv-add": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv add",
+        "cwd": "packages/bar"
+      }
+    },
+    "uv-run": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv run",
+        "cwd": "packages/bar"
+      }
+    }
+  },
+  "tags": ["python", "library"],
+  "implicitDependencies": ["foo"]
+}

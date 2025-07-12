@@ -1,0 +1,254 @@
+{
+  "graph": {
+    "nodes": {
+      "bar": {
+        "name": "bar",
+        "type": "lib",
+        "data": {
+          "root": "packages/bar",
+          "name": "bar",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "projectType": "library",
+          "sourceRoot": "packages/bar/src",
+          "tags": [
+            "python",
+            "library"
+          ],
+          "implicitDependencies": [
+            "foo"
+          ],
+          "targets": {
+            "install": {
+              "executor": "@nxlv/python:install",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "sync": {
+              "executor": "@nxlv/python:sync",
+              "options": {},
+              "dependsOn": [
+                "foo:sync"
+              ],
+              "configurations": {},
+              "parallelism": true
+            },
+            "build": {
+              "executor": "@nxlv/python:build",
+              "options": {
+                "outputPath": "dist/packages/bar",
+                "publish": false
+              },
+              "dependsOn": [
+                "foo:build"
+              ],
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "test": {
+              "executor": "@nxlv/python:run-commands",
+              "options": {
+                "command": "python -m pytest",
+                "cwd": "packages/bar"
+              },
+              "dependsOn": [
+                "foo:install"
+              ],
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "lint": {
+              "executor": "@nxlv/python:ruff-check",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "format": {
+              "executor": "@nxlv/python:ruff-format",
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            },
+            "serve": {
+              "executor": "@nxlv/python:run-commands",
+              "options": {
+                "command": "python -c \"from bar import run_bar; run_bar()\"",
+                "cwd": "packages/bar"
+              },
+              "dependsOn": [
+                "foo:install"
+              ],
+              "configurations": {},
+              "parallelism": true
+            },
+            "add": {
+              "executor": "@nxlv/python:add",
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            },
+            "remove": {
+              "executor": "@nxlv/python:remove",
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            },
+            "uv-sync": {
+              "executor": "@nxlv/python:run-commands",
+              "options": {
+                "command": "uv sync",
+                "cwd": "packages/bar"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "uv-add": {
+              "executor": "@nxlv/python:run-commands",
+              "options": {
+                "command": "uv add",
+                "cwd": "packages/bar"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "uv-run": {
+              "executor": "@nxlv/python:run-commands",
+              "options": {
+                "command": "uv run",
+                "cwd": "packages/bar"
+              },
+              "configurations": {},
+              "parallelism": true
+            }
+          }
+        }
+      },
+      "foo": {
+        "name": "foo",
+        "type": "lib",
+        "data": {
+          "root": "packages/foo",
+          "name": "foo",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "projectType": "library",
+          "sourceRoot": "packages/foo/src",
+          "tags": [
+            "python",
+            "library"
+          ],
+          "targets": {
+            "install": {
+              "executor": "@nxlv/python:install",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "sync": {
+              "executor": "@nxlv/python:sync",
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            },
+            "build": {
+              "executor": "@nxlv/python:build",
+              "options": {
+                "outputPath": "dist/packages/foo",
+                "publish": false
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "test": {
+              "executor": "@nxlv/python:run-commands",
+              "options": {
+                "command": "python -m pytest",
+                "cwd": "packages/foo"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "lint": {
+              "executor": "@nxlv/python:ruff-check",
+              "options": {},
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "format": {
+              "executor": "@nxlv/python:ruff-format",
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            },
+            "serve": {
+              "executor": "@nxlv/python:run-commands",
+              "options": {
+                "command": "python -c \"from foo import get_foo; print(get_foo())\"",
+                "cwd": "packages/foo"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "add": {
+              "executor": "@nxlv/python:add",
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            },
+            "remove": {
+              "executor": "@nxlv/python:remove",
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            },
+            "uv-sync": {
+              "executor": "@nxlv/python:run-commands",
+              "options": {
+                "command": "uv sync",
+                "cwd": "packages/foo"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "uv-add": {
+              "executor": "@nxlv/python:run-commands",
+              "options": {
+                "command": "uv add",
+                "cwd": "packages/foo"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "uv-run": {
+              "executor": "@nxlv/python:run-commands",
+              "options": {
+                "command": "uv run",
+                "cwd": "packages/foo"
+              },
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      }
+    },
+    "dependencies": {
+      "bar": [
+        {
+          "source": "bar",
+          "target": "foo",
+          "type": "implicit"
+        }
+      ],
+      "foo": []
+    }
+  }
+}

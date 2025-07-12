@@ -1,5 +1,14 @@
 # Multi-Language Monorepo Commands
 
+## Pre-commit Hooks
+
+Pre-commit hooks automatically run:
+- **Dependency validation** (Python packages only)
+- **Lint and format** (language-specific):
+  - Python packages (foo, bar): `ruff format` + `ruff check`  
+  - Node.js packages (baz): `eslint --fix` + `eslint`
+  - Only runs on staged files in respective packages
+
 ## Dependency Validation (Python packages only)
 
 ```bash

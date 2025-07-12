@@ -1,2 +1,5 @@
 # Run dependency validation
 ./validate-deps.sh
+
+# Run lint and format checks
+./pre-commit-lint-format.sh

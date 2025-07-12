@@ -8,10 +8,6 @@
       "executor": "@nxlv/python:install",
       "options": {}
     },
-    "sync": {
-      "executor": "@nxlv/python:sync",
-      "options": {}
-    },
     "build": {
       "executor": "@nxlv/python:build",
       "options": {

@@ -135,6 +135,145 @@
           }
         }
       },
+      "baz": {
+        "name": "baz",
+        "type": "app",
+        "data": {
+          "root": "packages/baz",
+          "name": "baz",
+          "tags": [
+            "npm:public",
+            "npm:express",
+            "npm:server",
+            "npm:hello",
+            "nodejs",
+            "application",
+            "server"
+          ],
+          "metadata": {
+            "targetGroups": {
+              "NPM Scripts": [
+                "start"
+              ]
+            },
+            "description": "Simple Node.js server that responds with hello",
+            "js": {
+              "packageName": "baz",
+              "packageMain": "src/index.js",
+              "isInPackageManagerWorkspaces": true
+            }
+          },
+          "targets": {
+            "start": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "start"
+              },
+              "metadata": {
+                "scriptContent": "node src/index.js",
+                "runCommand": "pnpm run start"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "install": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "pnpm install",
+                "cwd": "packages/baz"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "serve": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "node src/index.js",
+                "cwd": "packages/baz"
+              },
+              "dependsOn": [
+                "install"
+              ],
+              "configurations": {},
+              "parallelism": true
+            },
+            "dev": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "node src/index.js",
+                "cwd": "packages/baz"
+              },
+              "dependsOn": [
+                "install"
+              ],
+              "configurations": {},
+              "parallelism": true
+            },
+            "build": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "echo 'Build completed for baz'",
+                "cwd": "packages/baz"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "test": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "npm test",
+                "cwd": "packages/baz"
+              },
+              "dependsOn": [
+                "install"
+              ],
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "lint": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "npx eslint src/**/*.js",
+                "cwd": "packages/baz"
+              },
+              "dependsOn": [
+                "install"
+              ],
+              "configurations": {},
+              "parallelism": true,
+              "cache": true
+            },
+            "format": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "npx eslint src/**/*.js --fix",
+                "cwd": "packages/baz"
+              },
+              "dependsOn": [
+                "install"
+              ],
+              "configurations": {},
+              "parallelism": true
+            },
+            "sync": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "pnpm install",
+                "cwd": "packages/baz"
+              },
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "projectType": "application",
+          "sourceRoot": "packages/baz/src",
+          "implicitDependencies": []
+        }
+      },
       "foo": {
         "name": "foo",
         "type": "lib",
@@ -264,6 +403,7 @@
           "type": "implicit"
         }
       ],
+      "baz": [],
       "foo": []
     }
   }

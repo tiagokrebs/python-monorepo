@@ -46,11 +46,11 @@ uv remove pytest
 # Install dependencies
 pnpm install
 
-# Sync packages
-npx nx run-many --target=sync
-npx nx run foo:sync    # Python package
-npx nx run bar:sync    # Python package
-npx nx run baz:sync    # Node.js package
+# Install packages
+npx nx run-many --target=install
+npx nx run foo:install    # Python package
+npx nx run bar:install    # Python package
+npx nx run baz:install    # Node.js package
 
 # Serve packages
 npx nx run foo:serve   # Python: outputs "foo"
@@ -94,7 +94,7 @@ npx nx graph --file=dependency-graph.json
 ## Direct uv Commands (Python packages only)
 
 ```bash
-# Sync packages
+# Install packages
 cd packages/foo && uv sync
 uv sync --directory packages/foo
 

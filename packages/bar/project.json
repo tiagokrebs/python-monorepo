@@ -6,12 +6,8 @@
   "targets": {
     "install": {
       "executor": "@nxlv/python:install",
-      "options": {}
-    },
-    "sync": {
-      "executor": "@nxlv/python:sync",
       "options": {},
-      "dependsOn": ["foo:sync"]
+      "dependsOn": ["foo:install"]
     },
     "build": {
       "executor": "@nxlv/python:build",
